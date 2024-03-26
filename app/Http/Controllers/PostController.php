@@ -23,7 +23,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.posts.create');
     }
 
     /**
@@ -31,7 +31,15 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $val_data = $request->validated();
+
+        $slug = Post::generateSlug( $request->title );
+
+        $val_data['slug'] = $slug;
+
+        $new_post = Post::create($val_data);
+
+        return redirect()->route('dashboard.posts.index');
     }
 
     /**
