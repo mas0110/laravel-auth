@@ -11,10 +11,18 @@
         <div class="mb-3">
           <label for="" class="form-label">Title</label>
           <input type="text"
-            class="form-control"
+            class="form-control
+                @error('title')
+                    is-invalid
+                @enderror"
             name="title"
             id="title"
             />
+            @error('title')
+                    <div class="alert alert-danger mt-3">
+                        {{ $message }}
+                    </div>
+            @enderror
         </div>
 
         <div class="mb-3">
