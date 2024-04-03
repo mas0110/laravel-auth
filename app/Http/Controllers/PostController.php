@@ -47,7 +47,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view( 'pages.posts.show', compact('post') );
     }
 
     /**
@@ -55,7 +55,12 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+         //ottengo i dati della tabella Categories
+         $categories = Category::all();
+
+         $tags = Tag::all();
+
+         return view('pages.posts.edit', compact('post', 'categories', 'tags') );
     }
 
     /**
@@ -63,7 +68,33 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $val_data = $request->validated();
+
+        //generiamo lo slug in modo dinamico
+        $slug = Post::generateSlug($request->title);
+        $val_data['slug'] = $slug;
+
+        if( $request->hasFile('cover_image') ){
+            if( $post->cover_image ){
+                Storage::delete($post->cover_image);
+            }
+
+            $path = Storage::disk('public')->put('post_images', $request->cover_image);
+
+            $val_data['cover_image'] = $path;
+        }
+
+
+        $post->update( $val_data );
+
+        //dd( $request, $post, $request->tags );
+
+        if( $request->has('tags') ){
+            $post->tags()->sync( $request->tags );
+        }
+
+        return redirect()->route('dashboard.posts.index');
+
     }
 
     /**
@@ -71,6 +102,18 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        //rimuovo l'associazione tra posts e tags
+        $post->tags()->sync([]);
+
+        //cancellazione del file nella cartella storage
+        if( $post->cover_image ){
+            Storage::delete($post->cover_image);
+        }
+
+        //cancellazione del record del DB
+        $post->delete();
+
+        return redirect()->route('dashboard.posts.index');
+
     }
 }
