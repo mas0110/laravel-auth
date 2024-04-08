@@ -25,6 +25,15 @@
             @enderror
         </div>
 
+        <div class="mb-3">
+            <input
+                type="file"
+                name="cover_image"
+                id="cover_image"
+                class="form-control
+                    @error('cover_image') is-invalid @enderror">
+        </div>
+
         {{-- Aggiungiamo le categories --}}
         <div class="mb-3">
             <label for="category_id" class="form-label">Categories</label>
