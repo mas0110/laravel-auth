@@ -10,9 +10,6 @@
             <img class="img-fluid" src="{{ asset('/storage/' . $post->cover_image ) }}" alt="{{ $post->title }}">
         @endif
 
-
-        {{-- {{ dd($post->category) }} --}}
-
         {{-- mostrimao la categoria se presente --}}
         <p>
             <strong>

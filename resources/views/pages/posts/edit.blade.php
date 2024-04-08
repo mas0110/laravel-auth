@@ -123,7 +123,7 @@
                 <textarea class="form-control" name="content" id="content" rows="3">{{ old( 'content', $post->content ) }}</textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Crea</button>
+            <button type="submit" class="btn btn-primary">Modifica</button>
 
 
 
