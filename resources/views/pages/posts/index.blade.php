@@ -13,15 +13,17 @@
                         <th scope="col">title</th>
                         <th scope="col">content</th>
                         <th scope="col">slug</th>
+                        <th scope="col">cover image</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($posts as $item)
                     <tr class="">
                         <td>{{ $item->id}}</td>
-                        <td>{{ $item->title }}</td>
+                        <td><a href="{{ route('dashboard.posts.show', $item->slug) }}">{{ $item->title }}</a></td>
                         <td>{{ $item->content }}</td>
                         <td>{{ $item->slug }}</td>
+                        <td>{{ $item->cover_image }}</td>
                         <td>
                             <a class="btn btn-primary" href=" {{ route('dashboard.posts.edit', $item->slug ) }} ">
                                 Modifica
