@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\Category;
+use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -23,7 +27,11 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('pages.posts.create');
+        $categories = Category::all();
+
+        $tags = Tag::all();
+
+        return view('pages.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -34,10 +42,21 @@ class PostController extends Controller
         $val_data = $request->validated();
 
         $slug = Post::generateSlug( $request->title );
-
         $val_data['slug'] = $slug;
 
+        if( $request->hasFile('cover_image') ){
+
+            $path = Storage::disk('public')->put( 'post_images', $request->cover_image );
+
+
+            $val_data['cover_image'] = $path;
+        }
+
         $new_post = Post::create($val_data);
+
+        if( $request->has( 'tags' ) ){
+            $new_post->tags()->attach( $request->tags );
+        }
 
         return redirect()->route('dashboard.posts.index');
     }
@@ -87,7 +106,6 @@ class PostController extends Controller
 
         $post->update( $val_data );
 
-        //dd( $request, $post, $request->tags );
 
         if( $request->has('tags') ){
             $post->tags()->sync( $request->tags );
